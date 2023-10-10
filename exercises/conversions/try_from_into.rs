@@ -27,7 +27,6 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
 
 // Your task is to complete this implementation and return an Ok result of inner
 // type Color. You need to create an implementation for a tuple of three
@@ -74,14 +73,15 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
-        if slice.count() != 3 {
+        if slice.len() != 3 {
             return Err(IntoColorError::BadLen);
         }
-        slice.iter()
-             .map(|&x| if x < 0 ||
-                          x > 255 
-                              { return Err(IntoColorError::IntConversion); })
-             .collect::<Vec<_>>();  
+        for i in slice {
+            if *i < 0 || *i > 255 {
+                return Err(IntoColorError::IntConversion);
+            }
+        }
+
         Ok(Color {
             red: slice[0] as u8,
             green: slice[1] as u8,
